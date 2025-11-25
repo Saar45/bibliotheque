@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # Service PHP-Apache
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bibliotheque_web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_NAME=bibliotheque
+      - DB_USER=root
+      - DB_PASS=rootpassword
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - bibliotheque_network
+
+  # Service MySQL
+  db:
+    image: mysql:8.0
+    container_name: bibliotheque_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: bibliotheque
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bibliotheque_network
+
+  # Service phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: bibliotheque_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    depends_on:
+      - db
+    networks:
+      - bibliotheque_network
+
+volumes:
+  db_data:
+
+networks:
+  bibliotheque_network:
+    driver: bridge

@@ -1,0 +1,18 @@
+{
+    "name": "bibliotheque/app",
+    "description": "Application PHP Bibliothèque",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}

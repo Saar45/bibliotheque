@@ -1,0 +1,17 @@
+# Composer dependencies
+/vendor/
+
+# Configuration with credentials
+config.php
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+.history
