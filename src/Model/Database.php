@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+//require_once __DIR__ . '/../../config.php';
+
 use PDO;
 use PDOException;
 
